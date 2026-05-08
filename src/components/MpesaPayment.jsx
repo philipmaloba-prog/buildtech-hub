@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from '../context/CartContext';
+import { useNotifications } from "../context/NotificationContext";
+import SportsLoader from "./SportsLoader";
 
 const MpesaPayment = () => {
     const { cart, dispatch } = useCart();
+    const { addNotification } = useNotifications();
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const [amount] = useState(total.toLocaleString());
     const [phone, setPhone] = useState("");
@@ -16,6 +19,11 @@ const MpesaPayment = () => {
         const numAmount = parseFloat(amount.replace(/,/g, ''));
         if (!amount || !phone || numAmount < 10) {
             setStatus("Amount must be at least KSh 10 and phone required");
+            addNotification({
+                type: "warning",
+                title: "Invalid Payment Details",
+                message: "Enter a valid phone number and amount above KSh 10.",
+            });
             return;
         }
 
@@ -28,6 +36,26 @@ const MpesaPayment = () => {
         // Simulate success (90% chance)
         if (Math.random() > 0.1) {
             setStatus("Payment successful! STK Push sent to " + phone + ". Check M-Pesa.");
+            const completedOrder = {
+                id: `KP-${Date.now()}`,
+                createdAt: new Date().toISOString(),
+                items: cart.map((item) => ({
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                })),
+                total,
+                phone: `+254${phone}`,
+                paymentMethod: "M-Pesa",
+                status: "Paid",
+            };
+            dispatch({ type: "ADD_ORDER", payload: completedOrder });
+            addNotification({
+                type: "success",
+                title: "Payment Successful",
+                message: `STK Push sent to +254${phone}.`,
+            });
             dispatch({ type: 'CLEAR_CART' });
             dispatch({ type: 'TOGGLE_PAYMENT' });
             setTimeout(() => {
@@ -35,6 +63,11 @@ const MpesaPayment = () => {
             }, 2000);
         } else {
             setStatus("Payment failed. Insufficient balance or timeout.");
+            addNotification({
+                type: "error",
+                title: "Payment Failed",
+                message: "Insufficient balance or request timeout. Please try again.",
+            });
         }
         setLoading(false);
     };
@@ -61,10 +94,7 @@ const MpesaPayment = () => {
                             )}
                             {loading && (
                                 <div className="alert alert-info">
-                                    <div className="d-flex align-items-center">
-                                        <i className="bi bi-credit-card spinner-border spinner-border-sm me-2"></i>
-                                        <span>Processing payment...</span>
-                                    </div>
+                                    <SportsLoader text="Processing payment..." compact />
                                 </div>
                             )}
                             <form onSubmit={handlePayment} className="pro-form">

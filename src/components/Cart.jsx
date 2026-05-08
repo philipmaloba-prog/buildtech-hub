@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useNotifications } from '../context/NotificationContext';
 
 const Cart = () => {
-  const { cart, dispatch, showPayment } = useCart();
+  const { cart, dispatch } = useCart();
+  const { addNotification } = useNotifications();
   const navigate = useNavigate();
 
   const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -87,7 +89,14 @@ const Cart = () => {
                 <h5>KSh {(item.price * item.quantity).toLocaleString()}</h5>
                 <button 
                   className="btn btn-outline-danger btn-sm"
-                  onClick={() => dispatch({ type: 'REMOVE_ITEM', payload: item.id })}
+                  onClick={() => {
+                    dispatch({ type: 'REMOVE_ITEM', payload: item.id });
+                    addNotification({
+                      type: 'warning',
+                      title: 'Item Removed',
+                      message: `${item.name} was removed from your cart.`,
+                    });
+                  }}
                 >
                   <i className="bi bi-trash"></i> Remove
                 </button>
@@ -113,6 +122,11 @@ const Cart = () => {
                 className="btn btn-success w-100 mb-2 btn-lg"
                 onClick={() => {
                   dispatch({ type: 'TOGGLE_PAYMENT' });
+                  addNotification({
+                    type: 'info',
+                    title: 'Checkout Started',
+                    message: 'Proceeding to M-Pesa payment.',
+                  });
                   navigate('/mpesapayment');
                 }}
                 disabled={itemCount === 0}
@@ -125,7 +139,14 @@ const Cart = () => {
               </Link>
               <button 
                 className="btn btn-outline-danger w-100 mt-2"
-                onClick={() => dispatch({ type: 'CLEAR_CART' })}
+                onClick={() => {
+                  dispatch({ type: 'CLEAR_CART' });
+                  addNotification({
+                    type: 'warning',
+                    title: 'Cart Cleared',
+                    message: 'All items were removed from your cart.',
+                  });
+                }}
               >
                 Clear Cart
               </button>

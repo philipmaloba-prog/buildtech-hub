@@ -42,7 +42,7 @@ export const mockProducts = [
         delivery: "Free Nationwide Shipping",
         benefit: "One set for full-body strength sessions",
         specs: ["Range: 5-25kg", "Includes: Storage Rack"],
-        image: "https://images.unsplash.com/photo-1574441549548-2cc340fdd0a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+        image: "https://picsum.photos/seed/kitplug-weight-set/1000/700"
     },
     {
         id: 4,
@@ -57,7 +57,7 @@ export const mockProducts = [
         delivery: "Same-Day Nairobi",
         benefit: "Improve sprint power and stride control",
         specs: ["Levels: 5", "Accessories: Handles + Straps"],
-        image: "https://images.unsplash.com/photo-1581222375627-f04362015b99?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+        image: "https://picsum.photos/seed/kitplug-resistance-bands/1000/700"
     },
     {
         id: 5,
@@ -87,6 +87,6 @@ export const mockProducts = [
         delivery: "Free Pick-up Option",
         benefit: "Sharper footwork for match performance",
         specs: ["Length: 10m", "Bonus: Carry Bag"],
-        image: "https://images.unsplash.com/photo-1612872087726-bb905bf65fde?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+        image: "https://picsum.photos/seed/kitplug-agility-ladder/1000/700"
     }
 ];

@@ -63,6 +63,108 @@ body {
   color: var(--sport-ink);
 }
 
+.dark-mode {
+  color: #dfe8e5;
+}
+
+.dark-mode .sports-header {
+  background:
+    linear-gradient(135deg, rgba(8, 16, 24, 0.98), rgba(6, 56, 38, 0.96)),
+    repeating-linear-gradient(
+      -35deg,
+      rgba(255, 255, 255, 0.06) 0,
+      rgba(255, 255, 255, 0.06) 8px,
+      transparent 8px,
+      transparent 16px
+    );
+}
+
+.dark-mode .sports-navbar {
+  background: rgba(18, 29, 35, 0.88) !important;
+  border-bottom-color: rgba(91, 227, 165, 0.2);
+}
+
+.dark-mode .sports-nav-link {
+  color: #d4e5df !important;
+}
+
+.dark-mode .sports-nav-link:hover {
+  background-color: rgba(91, 227, 165, 0.12);
+  color: #9cf0cb !important;
+}
+
+.dark-mode .product-card,
+.dark-mode .product-filters,
+.dark-mode .form-card,
+.dark-mode .notification-panel,
+.dark-mode .notification-toast {
+  background: #17232a;
+  border-color: rgba(91, 227, 165, 0.18);
+}
+
+.dark-mode .products-subheading,
+.dark-mode .product-desc,
+.dark-mode .product-delivery,
+.dark-mode .product-old-price,
+.dark-mode .notification-item-text,
+.dark-mode .notification-empty,
+.dark-mode .notification-toast-text {
+  color: #a9c0b8 !important;
+}
+
+.dark-mode .product-title,
+.dark-mode .notification-item-title,
+.dark-mode .notification-panel-header,
+.dark-mode .notification-toast-title {
+  color: #e4efeb !important;
+}
+
+.dark-mode .search-summary-chip,
+.dark-mode .search-empty-state {
+  background: rgba(23, 35, 42, 0.9);
+  border-color: rgba(91, 227, 165, 0.3);
+  color: #d8e7e2;
+}
+
+.dark-mode .search-summary-clear {
+  color: #8de7c1;
+}
+
+.dark-mode .form-control-pro,
+.dark-mode .form-select,
+.dark-mode .input-group-text,
+.dark-mode .smart-search-dropdown,
+.dark-mode .smart-search-item {
+  background: #132028;
+  color: #d7e8e2;
+  border-color: rgba(91, 227, 165, 0.2);
+}
+
+.dark-mode .smart-search-item:hover {
+  background: rgba(91, 227, 165, 0.14);
+}
+
+.dark-mode .smart-search-name {
+  color: #dceee8;
+}
+
+.dark-mode .smart-search-meta {
+  background: rgba(91, 227, 165, 0.16);
+  color: #bcebd9;
+}
+
+.dark-mode .site-footer {
+  background: linear-gradient(150deg, #0a1318 0%, #111c22 55%, #0f1720 100%);
+}
+
+.dark-mode .sports-loader-track {
+  background: linear-gradient(90deg, rgba(91, 227, 165, 0.26), rgba(255, 183, 3, 0.32), rgba(91, 227, 165, 0.26));
+}
+
+.dark-mode .sports-loader-text {
+  color: #cde4dd;
+}
+
 .app-shell {
   min-height: 100vh;
 }
@@ -107,6 +209,199 @@ body {
   color: #0b7f53 !important;
 }
 
+.notification-bell-btn {
+  border: 0;
+}
+
+.notification-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  width: min(360px, 90vw);
+  background: #fff;
+  border: 1px solid rgba(11, 127, 83, 0.2);
+  border-radius: 0.85rem;
+  z-index: 1200;
+  overflow: hidden;
+}
+
+.notification-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid rgba(11, 127, 83, 0.12);
+  font-weight: 700;
+  color: #16372f;
+}
+
+.notification-panel-header button {
+  border: 0;
+  background: transparent;
+  color: #0b7f53;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.notification-panel-list {
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.notification-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.35rem;
+  padding: 0.62rem 0.75rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+}
+
+.notification-item.unread {
+  background: rgba(14, 166, 108, 0.08);
+}
+
+.notification-item-main {
+  text-align: left;
+}
+
+.notification-item-title {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1a3832;
+}
+
+.notification-item-text {
+  margin: 0.1rem 0 0;
+  font-size: 0.78rem;
+  color: #5b726c;
+}
+
+.notification-item-remove {
+  border: 0;
+  background: transparent;
+  color: #6c7f7b;
+}
+
+.notification-empty {
+  margin: 0;
+  padding: 1rem 0.8rem;
+  color: #6a807b;
+  font-size: 0.84rem;
+}
+
+.notification-toast-stack {
+  position: fixed;
+  right: 1rem;
+  top: 1rem;
+  z-index: 1400;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  width: min(360px, calc(100vw - 2rem));
+}
+
+.notification-toast {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: start;
+  gap: 0.55rem;
+  background: #fff;
+  border-radius: 0.8rem;
+  padding: 0.62rem 0.7rem;
+  border: 1px solid rgba(13, 111, 75, 0.2);
+  box-shadow: 0 12px 26px rgba(10, 26, 22, 0.18);
+}
+
+.notification-toast-icon {
+  color: #0b7f53;
+  line-height: 1;
+}
+
+.notification-toast-title {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #193932;
+  text-align: left;
+}
+
+.notification-toast-text {
+  margin: 0.1rem 0 0;
+  font-size: 0.78rem;
+  color: #5b726c;
+  text-align: left;
+}
+
+.notification-toast-close {
+  border: 0;
+  background: transparent;
+  color: #6c7f7b;
+  line-height: 1;
+}
+
+.toast-success {
+  border-left: 4px solid #0ea66c;
+}
+
+.toast-error {
+  border-left: 4px solid #dc3545;
+}
+
+.toast-warning {
+  border-left: 4px solid #f4a700;
+}
+
+.toast-info {
+  border-left: 4px solid #198754;
+}
+
+.smart-search-wrap {
+  min-width: 300px;
+}
+
+.smart-search-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 1100;
+  background: #fff;
+  border: 1px solid rgba(11, 127, 83, 0.18);
+  border-radius: 0.85rem;
+  overflow: hidden;
+}
+
+.smart-search-item {
+  width: 100%;
+  border: 0;
+  background: #fff;
+  padding: 0.55rem 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+}
+
+.smart-search-item:hover {
+  background: rgba(14, 166, 108, 0.08);
+}
+
+.smart-search-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #16342d;
+}
+
+.smart-search-meta {
+  font-size: 0.74rem;
+  color: #5f746f;
+  background: rgba(14, 166, 108, 0.12);
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+}
+
 .products-page {
   padding-top: 0.5rem;
 }
@@ -118,6 +413,107 @@ body {
 
 .products-subheading {
   color: #4a5d58 !important;
+}
+
+.product-filters {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(14, 166, 108, 0.16);
+  border-radius: 1rem;
+}
+
+.product-stock-check {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.product-stock-check .form-check-input {
+  margin-top: 0;
+}
+
+.product-filters .form-range::-webkit-slider-thumb {
+  background: #0ea66c;
+}
+
+.product-filters .form-range::-moz-range-thumb {
+  background: #0ea66c;
+  border: 0;
+}
+
+.search-summary-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.88rem;
+  color: #2f4a43;
+  background: rgba(14, 166, 108, 0.12);
+  border: 1px solid rgba(14, 166, 108, 0.25);
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+}
+
+.search-summary-clear {
+  color: #0b7f53;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.search-summary-clear:hover {
+  color: #085f3e;
+}
+
+.search-empty-state {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px dashed rgba(11, 127, 83, 0.35);
+  border-radius: 0.9rem;
+  color: #2c443f;
+}
+
+.search-loading-shell {
+  display: flex;
+  justify-content: center;
+  padding: 2.4rem 0.5rem;
+}
+
+.sports-loader {
+  width: min(460px, 100%);
+}
+
+.sports-loader.compact {
+  width: 100%;
+}
+
+.sports-loader-track {
+  position: relative;
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(14, 166, 108, 0.2), rgba(255, 183, 3, 0.24), rgba(14, 166, 108, 0.2));
+  overflow: hidden;
+}
+
+.sports-loader-ball {
+  position: absolute;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  background: radial-gradient(circle at 30% 30%, #fff 0%, #ffd67c 24%, #ffb703 100%);
+  box-shadow: 0 0 0 4px rgba(255, 183, 3, 0.2);
+  animation: sports-slide 1.05s ease-in-out infinite alternate;
+}
+
+.sports-loader-text {
+  margin-top: 0.55rem;
+  font-size: 0.87rem;
+  font-weight: 600;
+  color: #1f3e37;
+  display: inline-flex;
+  align-items: center;
+}
+
+.sports-loader-text i {
+  color: #f4a700;
 }
 
 .product-card {
@@ -365,11 +761,32 @@ body {
   padding: 2px;
 }
 
+@media (max-width: 992px) {
+  .smart-search-wrap {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .notification-panel {
+    right: auto;
+    left: 0;
+  }
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes sports-slide {
+  from {
+    left: 0%;
+  }
+  to {
+    left: calc(100% - 16px);
   }
 }

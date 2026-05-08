@@ -45,6 +45,12 @@ const cartReducer = (state, action) => {
         ...state,
         cart: []
       };
+
+    case 'ADD_ORDER':
+      return {
+        ...state,
+        orders: [action.payload, ...state.orders]
+      };
     
     default:
       return state;
@@ -55,14 +61,17 @@ export const CartProvider = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, 
     { 
       cart: [], 
-      showPayment: false 
+      showPayment: false,
+      orders: []
     }, 
     () => {
       // Persist cart in localStorage
-      const saved = localStorage.getItem('kitplug-cart');
+      const savedCart = localStorage.getItem('kitplug-cart');
+      const savedOrders = localStorage.getItem('kitplug-orders');
       return {
-        cart: saved ? JSON.parse(saved) : [],
-        showPayment: false
+        cart: savedCart ? JSON.parse(savedCart) : [],
+        showPayment: false,
+        orders: savedOrders ? JSON.parse(savedOrders) : []
       };
     }
   );
@@ -70,6 +79,10 @@ export const CartProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem('kitplug-cart', JSON.stringify(state.cart));
   }, [state.cart]);
+
+  useEffect(() => {
+    localStorage.setItem('kitplug-orders', JSON.stringify(state.orders));
+  }, [state.orders]);
 
   return (
     <CartContext.Provider value={{ ...state, dispatch }}>

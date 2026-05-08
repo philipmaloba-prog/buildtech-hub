@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import SportsLoader from "./SportsLoader";
 
 const AddProducts = () => {
     const [productName, setProductName] = useState("");
@@ -61,8 +62,7 @@ const AddProducts = () => {
                             {success && <div className="alert alert-success rounded-3">{success}</div>}
                             {loading && (
                                 <div className="alert alert-info rounded-3">
-                                    <i className="bi bi-upload spinner-border spinner-border-sm me-2"></i>
-                                    Uploading product...
+                                    <SportsLoader text="Uploading product..." compact />
                                 </div>
                             )}
                             <form onSubmit={submit} className="pro-form">

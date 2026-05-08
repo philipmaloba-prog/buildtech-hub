@@ -1,11 +1,13 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { useNotifications } from "../context/NotificationContext";
 import { mockProducts } from "../data/products";
 
 const ProductDetails = () => {
     const { id } = useParams();
     const { dispatch } = useCart();
+    const { addNotification } = useNotifications();
     const product = mockProducts.find((item) => item.id === Number(id));
 
     if (!product) {
@@ -30,6 +32,10 @@ const ProductDetails = () => {
                                     alt={product.name}
                                     className="img-fluid h-100 w-100"
                                     style={{ objectFit: "cover", minHeight: "320px" }}
+                                    onError={(event) => {
+                                        event.currentTarget.onerror = null;
+                                        event.currentTarget.src = "https://picsum.photos/seed/kitplug-fallback/1000/700";
+                                    }}
                                 />
                             </div>
                             <div className="col-md-6">
@@ -40,7 +46,14 @@ const ProductDetails = () => {
                                     <div className="mt-auto d-flex gap-2 flex-wrap">
                                         <button
                                             className="btn btn-success"
-                                            onClick={() => dispatch({ type: "ADD_ITEM", payload: product })}
+                                            onClick={() => {
+                                                dispatch({ type: "ADD_ITEM", payload: product });
+                                                addNotification({
+                                                    type: "success",
+                                                    title: "Added to Cart",
+                                                    message: `${product.name} is now in your cart.`,
+                                                });
+                                            }}
                                         >
                                             <i className="bi bi-cart-plus me-1"></i>Add to Cart
                                         </button>

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import SportsLoader from "./SportsLoader";
 
 const SignIn = () => {
     const [email, setEmail] = useState("");
@@ -42,7 +43,11 @@ const SignIn = () => {
                             <h2 className="text-center mb-4 fw-bold">Sign In</h2>
                             {error && <div className="alert alert-danger rounded-3">{error}</div>}
                             {success && <div className="alert alert-success rounded-3">{success}</div>}
-                            {loading && <div className="alert alert-info rounded-3">Signing in...</div>}
+                            {loading && (
+                                <div className="alert alert-info rounded-3">
+                                    <SportsLoader text="Signing in..." compact />
+                                </div>
+                            )}
                             <form onSubmit={handleSubmit} className="pro-form">
                                 <div className="mb-3">
                                     <label className="form-label">Email</label>
