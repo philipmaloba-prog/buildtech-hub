@@ -1,93 +1,71 @@
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import SportsLoader from "./SportsLoader";
+import axios from "axios"
+import { useState } from "react"
+import { FaApple } from "react-icons/fa"
+import { FcGoogle } from "react-icons/fc"
+import { Link, useNavigate } from "react-router-dom"
 
-const SignIn = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
-    const [success, setSuccess] = useState("");
-    const navigate = useNavigate();
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!email || !password) {
-            setError("Please fill email and password");
-            return;
-        }
-
-        setLoading(true);
-        setError("");
-        setSuccess("");
-
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-
-        if (email === "demo@kitplug.com" && password === "demo123") {
-            setSuccess("Login successful! Welcome to KITPLUG.");
-            setTimeout(() => {
-                navigate("/");
-            }, 1000);
-        } else {
-            setError("Invalid credentials. Try demo@kitplug.com / demo123");
-        }
-        setLoading(false);
-    };
-
-    return (
-        <div className="container mt-5">
-            <div className="row justify-content-center">
-                <div className="col-md-6 col-lg-5">
-                    <div className="card shadow-lg border-0 form-card">
-                        <div className="card-body p-4 p-lg-5">
-                            <h2 className="text-center mb-4 fw-bold">Sign In</h2>
-                            {error && <div className="alert alert-danger rounded-3">{error}</div>}
-                            {success && <div className="alert alert-success rounded-3">{success}</div>}
-                            {loading && (
-                                <div className="alert alert-info rounded-3">
-                                    <SportsLoader text="Signing in..." compact />
-                                </div>
-                            )}
-                            <form onSubmit={handleSubmit} className="pro-form">
-                                <div className="mb-3">
-                                    <label className="form-label">Email</label>
-                                    <input
-                                        type="email"
-                                        className="form-control form-control-pro"
-                                        placeholder="Enter email"
-                                        required
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                    />
-                                </div>
-                                <div className="mb-4">
-                                    <label className="form-label">Password</label>
-                                    <input
-                                        type="password"
-                                        className="form-control form-control-pro"
-                                        placeholder="Enter password"
-                                        required
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                    />
-                                </div>
-                                <button
-                                    type="submit"
-                                    className="btn btn-success w-100 btn-pro"
-                                    disabled={loading}
-                                >
-                                    {loading ? "Signing In..." : "Sign In"}
-                                </button>
-                            </form>
-                            <p className="text-center mt-4 mb-0 text-muted">
-                                Don't have an account? <Link to="/signup">Sign Up</Link>
-                            </p>
-                        </div>
+const SignIn=()=>{
+    const[username,setUsername]=useState("")
+    const[password,setPassword]=useState("")
+    const[loading,setLoading]=useState("")
+    const[success,setSuccess]=useState("")
+    const[error,setError]=useState("")
+    const navigate=useNavigate()
+    const submit=async(e)=>{
+        e.preventDefault()
+        setLoading('please wait....')
+        try {
+            const data=new FormData()
+                data.append('username',username)
+                data.append('password',password)
+            
+            const response = await axios.post('https://philipswala.alwaysdata.net/api/signin',data)
+            setLoading('')
+            setSuccess(response.data.message)
+            //clear the form data
+            setUsername('')
+            setPassword('')
+            if (response.data.user){
+                //if user found save user item in local storage
+                localStorage.setItem('user',JSON.stringify(response.data.user))//stringify changes the user object from data object to string
+                //redirect to home component==get products
+                navigate('/')
+            }else{
+                //if user not found show an error
+                setError(response.data.message)
+            }
+        } catch (error) {
+            setLoading('')
+            setError(error.message)
+            }
+    }
+    return(
+        <div className="d-flex justify-content-center row">
+            <div className="col-md-6 p-2 mt-4 card shadow" style={{backgroundColor:'lightblue'}}>
+                <h1 className="display text-bold" ><b>Sign In</b> </h1>
+                {loading}
+                {success}
+                {error}
+                <form onSubmit={submit}>
+                    <input type="text" placeholder="username" className="form-control"required value={username} onChange={(e)=>setUsername(e.target.value)}/> <br />{username}
+                    <input type="password" placeholder="password" className="form-control"required value={password} onChange={(e)=>setPassword(e.target.value)} /> <br />{password} 
+                    <button type="submit" className="btn btn-primary">Sign In</button>
+                    <div className="divider text-center">
+                        <span>or continue with</span>
                     </div>
-                </div>
+                    <div class="social">
+                    <button type="submit" className="btn btn-primary social-btn google">
+                    <FcGoogle className="icon"/>
+                    Google</button><br />
+                    <button type="submit" className="btn btn-primary social-btn apple">
+                    <FaApple className='icon'/>    
+                    Apple</button>
+                    </div>
+                    <p>Don't have an account? <Link to='/signUp'>Sign up</Link></p>
+                    
+                </form>
             </div>
         </div>
-    );
-};
-
-export default SignIn;
+    )
+}
+export default SignIn

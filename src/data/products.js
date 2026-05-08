@@ -1,92 +1,88 @@
-export const mockProducts = [
-    {
-        id: 1,
-        name: "Pro Football Cleats",
-        description: "Premium synthetic turf football boots with superior grip & speed",
-        price: 8999,
-        oldPrice: 10499,
-        category: "Football",
-        rating: 4.8,
-        reviews: 124,
-        stockStatus: "In Stock",
-        delivery: "Free Nairobi Delivery",
-        benefit: "Built for acceleration and match-day grip",
-        specs: ["Material: Synthetic", "Sizes: 39-46"],
-        image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
-    },
-    {
-        id: 2,
-        name: "Basketball Training Shoes",
-        description: "High-top basketball sneakers with ankle support & bounce technology",
-        price: 12999,
-        oldPrice: 14999,
-        category: "Basketball",
-        rating: 4.7,
-        reviews: 86,
-        stockStatus: "In Stock",
-        delivery: "Next-Day Dispatch",
-        benefit: "Extra ankle lock for explosive cuts",
-        specs: ["Support: High-Top", "Court: Indoor/Outdoor"],
-        image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
-    },
-    {
-        id: 3,
-        name: "Gym Weight Set",
-        description: "Adjustable dumbbell set (5-25kg) with rack for home training",
-        price: 24999,
-        oldPrice: 27999,
-        category: "Strength",
-        rating: 4.9,
-        reviews: 59,
-        stockStatus: "Limited Stock",
-        delivery: "Free Nationwide Shipping",
-        benefit: "One set for full-body strength sessions",
-        specs: ["Range: 5-25kg", "Includes: Storage Rack"],
-        image: "https://picsum.photos/seed/kitplug-weight-set/1000/700"
-    },
-    {
-        id: 4,
-        name: "Running Resistance Bands",
-        description: "5-level resistance band set with handles & ankle straps for speed training",
-        price: 3999,
-        oldPrice: 4999,
-        category: "Running",
-        rating: 4.6,
-        reviews: 142,
-        stockStatus: "In Stock",
-        delivery: "Same-Day Nairobi",
-        benefit: "Improve sprint power and stride control",
-        specs: ["Levels: 5", "Accessories: Handles + Straps"],
-        image: "https://picsum.photos/seed/kitplug-resistance-bands/1000/700"
-    },
-    {
-        id: 5,
-        name: "MMA Fight Gloves",
-        description: "14oz MMA training gloves with gel padding & wrist support",
-        price: 6999,
-        oldPrice: 8299,
-        category: "Combat",
-        rating: 4.8,
-        reviews: 91,
-        stockStatus: "In Stock",
-        delivery: "Express Delivery Available",
-        benefit: "Impact protection with secure wrist wrap",
-        specs: ["Weight: 14oz", "Padding: Gel Shield"],
-        image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
-    },
-    {
-        id: 6,
-        name: "Speed Agility Ladder",
-        description: "Professional 10m agility ladder with carry bag for football training",
-        price: 5499,
-        oldPrice: 6499,
-        category: "Training",
-        rating: 4.7,
-        reviews: 77,
-        stockStatus: "In Stock",
-        delivery: "Free Pick-up Option",
-        benefit: "Sharper footwork for match performance",
-        specs: ["Length: 10m", "Bonus: Carry Bag"],
-        image: "https://picsum.photos/seed/kitplug-agility-ladder/1000/700"
-    }
+export const Products = [
+    [
+  {
+    "product_cost": 750,
+    "product_description": "best for building purposes",
+    "product_id": 20,
+    "product_name": "cement",
+    "product_photo": "cement.jpeg"
+  },
+  {
+    "product_cost": 13330,
+    "product_description": "good for climbing purposes",
+    "product_id": 21,
+    "product_name": "5 step steel ladder",
+    "product_photo": "5stepsteelladder.webp"
+  },
+  {
+    "product_cost": 3100,
+    "product_description": "best sheet for construction",
+    "product_id": 22,
+    "product_name": "polycarbonate sheet",
+    "product_photo": "polycarbonatesheet.webp"
+  },
+  {
+    "product_cost": 3200,
+    "product_description": "affordable and nice",
+    "product_id": 23,
+    "product_name": "Black polythene sheet",
+    "product_photo": "blackpolythenesheet.webp"
+  },
+  {
+    "product_cost": 449,
+    "product_description": "An incredible one when you want to fix ceiling on your apartment",
+    "product_id": 24,
+    "product_name": "Acoustic ceiling tile",
+    "product_photo": "acousticceilingtile.webp"
+  },
+  {
+    "product_cost": 1700,
+    "product_description": "The best bars used while constructing",
+    "product_id": 25,
+    "product_name": "TMT Bars",
+    "product_photo": "TMT_bars.jpeg"
+  },
+  {
+    "product_cost": 13330,
+    "product_description": "The best mixer while mixing the cements",
+    "product_id": 26,
+    "product_name": "Drum Concrete Mixer",
+    "product_photo": "drumconcretemixer.jpeg"
+  },
+  {
+    "product_cost": 600,
+    "product_description": "very good in hammering the nails in frames",
+    "product_id": 27,
+    "product_name": "claw hammer",
+    "product_photo": "clawhammer.jpeg"
+  },
+  {
+    "product_cost": 750,
+    "product_description": "best for hitting rocks or hard surfaces",
+    "product_id": 28,
+    "product_name": "Sledge hammer",
+    "product_photo": "sledgehammer.jpeg"
+  },
+  {
+    "product_cost": 450,
+    "product_description": "This prevents one having head injuries",
+    "product_id": 29,
+    "product_name": "Safety Helmets",
+    "product_photo": "safetyhelmets.jpeg"
+  },
+  {
+    "product_cost": 6898,
+    "product_description": "Best for cutting wood and it is more simpler than using the hand saw.",
+    "product_id": 30,
+    "product_name": "Circular Saw",
+    "product_photo": "Circular_saw.jpg"
+  },
+  {
+    "product_cost": 600,
+    "product_description": "This is best in cutting purposes but more energy is needed",
+    "product_id": 31,
+    "product_name": "Hand Saw",
+    "product_photo": "Hand_saw.webp"
+  }
+]
 ];

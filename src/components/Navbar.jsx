@@ -1,264 +1,553 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import {
+    NavLink,
+    useLocation,
+    useNavigate,
+} from 'react-router-dom';
+
 import { useCart } from '../context/CartContext';
-import { mockProducts } from '../data/products';
+import { Products as fallbackProducts } from '../data/products';
 import { useNotifications } from '../context/NotificationContext';
 
 const Navbar = ({ darkMode, onToggleDarkMode }) => {
+
     const { cart } = useCart();
-    const { notifications, unreadCount, markAllAsRead, markNotificationAsRead, removeNotification } = useNotifications();
+
+    const {
+        notifications,
+        unreadCount,
+        markAllAsRead,
+        removeNotification
+    } = useNotifications();
+
+    const [products, setProducts] = useState([]);
+
     const [searchTerm, setSearchTerm] = useState('');
+
     const [showSuggestions, setShowSuggestions] = useState(false);
+
     const [showNotifications, setShowNotifications] = useState(false);
+
     const navigate = useNavigate();
+
     const location = useLocation();
-    const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
+    // CART COUNT
+    const itemCount = cart.reduce(
+        (sum, item) => sum + item.quantity,
+        0
+    );
+
+    // ACTIVE LINK STYLE
     const linkClass = ({ isActive }) =>
-        isActive 
-            ? 'nav-link sports-nav-link active fw-semibold text-success' 
-            : 'nav-link sports-nav-link';
+        isActive
+            ? 'nav-link fw-semibold text-success'
+            : 'nav-link text-light';
 
-    const handleSearchSubmit = (event) => {
-        event.preventDefault();
+    // FETCH PRODUCTS
+    useEffect(() => {
+
+        const fetchProducts = async () => {
+
+            try {
+
+                const res = await fetch(
+                    "https://philipswala.alwaysdata.net/api/get_product_details"
+                );
+
+                if (!res.ok)
+                    throw new Error("API failed");
+
+                const data = await res.json();
+
+                const formatted = data.map((item) => ({
+
+                    id: Number(item.product_id),
+
+                    name:
+                        item.product_name ||
+                        "Unnamed Product",
+
+                    description:
+                        item.product_description ||
+                        "",
+
+                    image:
+                        item.product_photo
+                            ? `https://philipswala.alwaysdata.net/static/images/${item.product_photo}`
+                            : "https://via.placeholder.com/100",
+
+                    price:
+                        Number(item.product_cost || 0),
+
+                    category:
+                        item.product_category ||
+                        "Construction"
+
+                }));
+
+                setProducts(formatted);
+
+            } catch (err) {
+
+                console.error(
+                    "Navbar API failed",
+                    err
+                );
+
+                setProducts(fallbackProducts);
+
+            }
+        };
+
+        fetchProducts();
+
+    }, []);
+
+    // SEARCH SUBMIT
+    const handleSearchSubmit = (e) => {
+
+        e.preventDefault();
+
         const query = searchTerm.trim();
+
         setShowSuggestions(false);
-        navigate(query ? `/?search=${encodeURIComponent(query)}` : '/');
+
+        navigate(
+            query
+                ? `/?search=${encodeURIComponent(query)}`
+                : '/'
+        );
     };
 
+    // URL SEARCH SYNC
     useEffect(() => {
-        if (location.pathname !== '/') {
+
+        if (location.pathname !== '/')
             return;
-        }
-        const searchQuery = new URLSearchParams(location.search).get('search') || '';
+
+        const searchQuery =
+            new URLSearchParams(location.search)
+                .get('search') || '';
+
         setSearchTerm(searchQuery);
-        setShowSuggestions(false);
+
     }, [location.pathname, location.search]);
 
-    useEffect(() => {
-        setShowNotifications(false);
-    }, [location.pathname, location.search]);
-
+    // LIVE SUGGESTIONS
     const suggestions = useMemo(() => {
-        const query = searchTerm.trim().toLowerCase();
-        if (query.length < 2) {
+
+        const query =
+            searchTerm.trim().toLowerCase();
+
+        if (query.length < 1)
             return [];
-        }
 
-        return mockProducts
-            .map((product) => {
-                const name = product.name.toLowerCase();
-                const category = (product.category || '').toLowerCase();
-                const description = product.description.toLowerCase();
-                const benefit = (product.benefit || '').toLowerCase();
-                const specs = (product.specs || []).join(' ').toLowerCase();
+        return products
 
-                let score = 0;
-                if (name === query) score += 100;
-                if (name.startsWith(query)) score += 55;
-                if (name.includes(query)) score += 32;
-                if (category.includes(query)) score += 18;
-                if (description.includes(query)) score += 14;
-                if (benefit.includes(query)) score += 12;
-                if (specs.includes(query)) score += 10;
+            .filter((p) =>
+                p.name
+                    ?.toLowerCase()
+                    .includes(query)
+            )
 
-                return { product, score };
-            })
-            .filter((entry) => entry.score > 0)
-            .sort((a, b) => b.score - a.score)
-            .slice(0, 5)
-            .map((entry) => entry.product);
-    }, [searchTerm]);
+            .slice(0, 6);
 
-    const handleSuggestionSelect = (productName) => {
-        setSearchTerm(productName);
-        setShowSuggestions(false);
-        navigate(`/?search=${encodeURIComponent(productName)}`);
-    };
+    }, [searchTerm, products]);
 
     return (
-        <nav className="navbar navbar-expand-lg navbar-light shadow-sm sticky-top sports-navbar">
+
+        <nav className="navbar navbar-expand-lg sticky-top glass-navbar">
+
             <div className="container">
-                <NavLink to="/" className="navbar-brand fw-bold text-success sports-brand">
-                    KITPLUG
+
+                {/* BRAND */}
+                <NavLink
+                    to="/"
+                    className="navbar-brand fw-bold text-light"
+                >
+                    🏗️ BuildTech
+                    <span className="text-success">
+                        Hub
+                    </span>
                 </NavLink>
 
+                {/* MOBILE TOGGLE */}
                 <button
                     className="navbar-toggler"
-                    type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#mainNavbar"
-                    aria-controls="mainNavbar"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
                 >
                     <span className="navbar-toggler-icon"></span>
                 </button>
 
-                <div className="collapse navbar-collapse" id="mainNavbar">
-                    <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                <div
+                    className="collapse navbar-collapse"
+                    id="mainNavbar"
+                >
+
+                    {/* MENU */}
+                    <ul className="navbar-nav me-auto">
+
                         <li className="nav-item dropdown">
+
                             <button
-                                className="nav-link sports-nav-link dropdown-toggle btn btn-link text-decoration-none"
-                                id="mainMenuDropdown"
+                                className="nav-link dropdown-toggle btn btn-link text-light"
                                 data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                                type="button"
                             >
                                 Menu
                             </button>
-                            <ul className="dropdown-menu shadow border-0" aria-labelledby="mainMenuDropdown">
+
+                            <ul className="dropdown-menu glass border-0">
+
                                 <li>
-                                    <NavLink to="/" className="dropdown-item">
+                                    <NavLink
+                                        to="/"
+                                        className="dropdown-item"
+                                    >
                                         Home
                                     </NavLink>
                                 </li>
+
                                 <li>
-                                    <NavLink to="/addproduct" className="dropdown-item">
-                                        Add Product
+                                    <NavLink
+                                        to="/admin"
+                                        className="dropdown-item"
+                                    >
+                                        Admin Panel
                                     </NavLink>
                                 </li>
+
                                 <li>
-                                    <NavLink to="/signin" className="dropdown-item">
+                                    <NavLink
+                                        to="/signin"
+                                        className="dropdown-item"
+                                    >
                                         Sign In
                                     </NavLink>
                                 </li>
+
                                 <li>
-                                    <NavLink to="/signup" className="dropdown-item">
+                                    <NavLink
+                                        to="/signup"
+                                        className="dropdown-item"
+                                    >
                                         Sign Up
                                     </NavLink>
                                 </li>
+
                             </ul>
+
                         </li>
+
                     </ul>
+
+                    {/* SEARCH */}
                     <form
-                        className="d-flex align-items-center mx-lg-4 mb-3 mb-lg-0 pro-form position-relative smart-search-wrap"
-                        role="search"
+                        className="position-relative mx-lg-4"
                         onSubmit={handleSearchSubmit}
                     >
-                        <div className="input-group">
-                            <span className="input-group-text bg-white border-end-0 rounded-start-pill input-group-text-pro">
-                                <i className="bi bi-search text-secondary"></i>
-                            </span>
+
+                        <div
+                            className="d-flex align-items-center"
+                            style={{
+                                gap: "10px",
+                                position: "relative",
+                            }}
+                        >
+
+                            {/* INPUT */}
                             <input
                                 type="search"
-                                className="form-control form-control-pro border-start-0 border-end-0 shadow-none"
-                                placeholder="Search products..."
-                                aria-label="Search products"
+                                className="form-control"
+                                placeholder="Search cement, steel, tools..."
                                 value={searchTerm}
-                                onFocus={() => setShowSuggestions(true)}
-                                onBlur={() => {
-                                    setTimeout(() => setShowSuggestions(false), 120);
-                                }}
-                                onChange={(event) => {
-                                    setSearchTerm(event.target.value);
+                                onFocus={() =>
+                                    setShowSuggestions(true)
+                                }
+                                onBlur={() =>
+                                    setTimeout(
+                                        () => setShowSuggestions(false),
+                                        150
+                                    )
+                                }
+                                onChange={(e) => {
+                                    setSearchTerm(e.target.value);
                                     setShowSuggestions(true);
                                 }}
+                                style={{
+                                    minWidth: "340px",
+                                    height: "46px",
+                                    borderRadius: "12px",
+                                    border: "none",
+                                    padding: "0 18px",
+                                    background: "rgba(255,255,255,0.15)",
+                                    backdropFilter: "blur(10px)",
+                                    color: "white",
+                                }}
                             />
-                            <button className="btn btn-success rounded-end-pill px-4 btn-pro" type="submit">
+
+                            {/* BUTTON */}
+                            <button
+                                className="btn btn-success"
+                                style={{
+                                    height: "46px",
+                                    borderRadius: "12px",
+                                    padding: "0 22px",
+                                    whiteSpace: "nowrap",
+                                    fontWeight: "600",
+                                }}
+                            >
                                 Search
                             </button>
-                        </div>
-                        {showSuggestions && suggestions.length > 0 && (
-                            <div className="smart-search-dropdown shadow">
-                                {suggestions.map((product) => (
-                                    <button
-                                        key={product.id}
-                                        type="button"
-                                        className="smart-search-item"
-                                        onMouseDown={(event) => event.preventDefault()}
-                                        onClick={() => handleSuggestionSelect(product.name)}
+
+                            {/* SUGGESTIONS */}
+                            {showSuggestions &&
+                                suggestions.length > 0 && (
+
+                                    <div
+                                        style={{
+                                            position: "absolute",
+                                            top: "58px",
+                                            left: "0",
+                                            width: "340px",
+                                            background: "#fff",
+                                            borderRadius: "14px",
+                                            overflow: "hidden",
+                                            boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
+                                            zIndex: 999,
+                                        }}
                                     >
-                                        <span className="smart-search-name">{product.name}</span>
-                                        <span className="smart-search-meta">{product.category || 'Sports'}</span>
-                                    </button>
-                                ))}
-                            </div>
-                        )}
+
+                                        {suggestions.map((p) => (
+
+                                            <button
+                                                key={p.id}
+                                                type="button"
+                                                onMouseDown={(e) =>
+                                                    e.preventDefault()
+                                                }
+                                                onClick={() => {
+
+                                                    setSearchTerm('');
+
+                                                    setShowSuggestions(false);
+
+                                                    navigate(`/product/${p.id}`);
+
+                                                }}
+                                                style={{
+                                                    width: "100%",
+                                                    border: "none",
+                                                    background: "white",
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    gap: "12px",
+                                                    padding: "12px",
+                                                    cursor: "pointer",
+                                                    transition: "0.2s",
+                                                }}
+                                            >
+
+                                                {/* IMAGE */}
+                                                <img
+                                                    src={p.image}
+                                                    alt={p.name}
+                                                    style={{
+                                                        width: "55px",
+                                                        height: "55px",
+                                                        objectFit: "contain",
+                                                        background: "#fff",
+                                                        borderRadius: "10px",
+                                                        padding: "5px",
+                                                    }}
+                                                />
+
+                                                {/* INFO */}
+                                                <div
+                                                    style={{
+                                                        textAlign: "left",
+                                                    }}
+                                                >
+
+                                                    <div
+                                                        style={{
+                                                            fontWeight: "600",
+                                                            color: "#222",
+                                                        }}
+                                                    >
+                                                        {p.name}
+                                                    </div>
+
+                                                    <small
+                                                        style={{
+                                                            color: "#666",
+                                                        }}
+                                                    >
+                                                        KSh {p.price}
+                                                    </small>
+
+                                                </div>
+
+                                            </button>
+
+                                        ))}
+
+                                    </div>
+
+                                )}
+
+                        </div>
+
                     </form>
-                    <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
+
+                    {/* RIGHT SECTION */}
+                    <ul className="navbar-nav ms-auto align-items-center">
+
+                        {/* CART */}
                         <li className="nav-item position-relative">
-                            <NavLink to="/cart" className={linkClass}>
-                                <i className="bi bi-cart3"></i>
+
+                            <NavLink
+                                to="/cart"
+                                className={linkClass}
+                            >
+                                🛒
+
                                 {itemCount > 0 && (
-                                    <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+
+                                    <span className="badge bg-danger position-absolute top-0 start-100 translate-middle">
                                         {itemCount}
                                     </span>
+
                                 )}
+
                             </NavLink>
+
                         </li>
+
+                        {/* ADMIN */}
                         <li className="nav-item">
-                            <NavLink to="/orders" className={linkClass} title="Order History" aria-label="Order History">
-                                <span aria-hidden="true">🧾</span>
+
+                            <NavLink
+                                to="/admin"
+                                className={linkClass}
+                            >
+                                ⚙️
                             </NavLink>
+
                         </li>
-                        <li className="nav-item d-flex align-items-center ms-lg-2">
+
+                        {/* ORDERS */}
+                        <li className="nav-item">
+
+                            <NavLink
+                                to="/orders"
+                                className={linkClass}
+                            >
+                                🧾
+                            </NavLink>
+
+                        </li>
+
+                        {/* DARK MODE */}
+                        <li className="nav-item ms-2">
+
                             <button
-                                type="button"
-                                className="btn btn-sm btn-outline-success rounded-pill"
+                                className="btn btn-outline-light btn-sm"
                                 onClick={onToggleDarkMode}
-                                aria-label="Toggle dark mode"
                             >
-                                <i className={`bi ${darkMode ? "bi-sun-fill" : "bi-moon-stars-fill"} me-1`}></i>
-                                {darkMode ? "Light" : "Dark"}
+                                {darkMode ? "☀️" : "🌙"}
                             </button>
+
                         </li>
+
+                        {/* NOTIFICATIONS */}
                         <li className="nav-item position-relative">
+
                             <button
-                                type="button"
-                                className="btn nav-link sports-nav-link position-relative notification-bell-btn"
-                                onClick={() => setShowNotifications((prev) => !prev)}
+                                className="btn nav-link text-light"
+                                onClick={() =>
+                                    setShowNotifications(p => !p)
+                                }
                             >
-                                <i className="bi bi-bell"></i>
+                                🔔
+
                                 {unreadCount > 0 && (
-                                    <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                        {unreadCount > 9 ? "9+" : unreadCount}
+
+                                    <span className="badge bg-danger position-absolute top-0 start-100 translate-middle">
+                                        {unreadCount}
                                     </span>
+
                                 )}
+
                             </button>
+
                             {showNotifications && (
-                                <div className="notification-panel shadow">
-                                    <div className="notification-panel-header">
-                                        <span>Notifications</span>
-                                        <button type="button" onClick={markAllAsRead}>
-                                            Mark all read
+
+                                <div className="notifications-box">
+
+                                    <div className="d-flex justify-content-between mb-2">
+
+                                        <strong>
+                                            Notifications
+                                        </strong>
+
+                                        <button
+                                            onClick={markAllAsRead}
+                                            className="btn btn-sm btn-link"
+                                        >
+                                            Mark all
                                         </button>
+
                                     </div>
-                                    <div className="notification-panel-list">
-                                        {notifications.length === 0 ? (
-                                            <p className="notification-empty">No notifications yet.</p>
-                                        ) : (
-                                            notifications.slice(0, 8).map((item) => (
-                                                <div
-                                                    key={item.id}
-                                                    className={`notification-item ${item.read ? "read" : "unread"}`}
-                                                    onClick={() => markNotificationAsRead(item.id)}
+
+                                    {notifications.length === 0 ? (
+
+                                        <p>No notifications</p>
+
+                                    ) : (
+
+                                        notifications.map((n) => (
+
+                                            <div
+                                                key={n.id}
+                                                className="mb-2"
+                                            >
+
+                                                <strong>
+                                                    {n.title}
+                                                </strong>
+
+                                                <p>
+                                                    {n.message}
+                                                </p>
+
+                                                <button
+                                                    onClick={() =>
+                                                        removeNotification(n.id)
+                                                    }
                                                 >
-                                                    <div className="notification-item-main">
-                                                        <p className="notification-item-title">{item.title}</p>
-                                                        <p className="notification-item-text">{item.message}</p>
-                                                    </div>
-                                                    <button
-                                                        type="button"
-                                                        onClick={(event) => {
-                                                            event.stopPropagation();
-                                                            removeNotification(item.id);
-                                                        }}
-                                                        className="notification-item-remove"
-                                                        aria-label="Remove notification"
-                                                    >
-                                                        <i className="bi bi-x"></i>
-                                                    </button>
-                                                </div>
-                                            ))
-                                        )}
-                                    </div>
+                                                    ❌
+                                                </button>
+
+                                            </div>
+
+                                        ))
+
+                                    )}
+
                                 </div>
+
                             )}
+
                         </li>
+
                     </ul>
+
                 </div>
+
             </div>
+
         </nav>
     );
 };

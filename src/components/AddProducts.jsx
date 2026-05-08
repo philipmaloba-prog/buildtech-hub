@@ -1,21 +1,66 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SportsLoader from "./SportsLoader";
+import axios from "axios"; 
+import BuildLoader from "./BuildLoader";
+import { Products } from "../data/products";
 
 const AddProducts = () => {
-    const [productName, setProductName] = useState("");
-    const [productDescription, setProductDescription] = useState("");
-    const [productCost, setProductCost] = useState("");
-    const [productPhoto, setProductPhoto] = useState(null);
+    const [itemName, setItemName] = useState("");
+    const [itemDescription, setItemDescription] = useState("");
+    const [itemCost, setItemCost] = useState("");
+    const [itemPhoto, setItemPhoto] = useState(null);
+    const [itemCategory, setItemCategory] = useState("Cement");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const navigate = useNavigate();
 
+   const adminCategories = [
+    "Building Materials",
+    "Cement",
+    "Sand",
+    "Bricks",
+    "Steel",
+    "Roofing",
+    "Plumbing",
+    "Electrical",
+    "Paint",
+    "Tiles",
+    "Tools",
+    "Safety Equipment",
+    "Doors & Windows",
+    "Hardware"
+    ];
+
+    // Dashboard logic kept for your UI stats
+    const dashboardStats = useMemo(() => {
+        const totalItems = Products.length;
+        const totalInventoryValue = Products.reduce((sum, item) => sum + item.price, 0);
+        const inStockCount = Products.filter((item) =>
+            /in stock/i.test(item.stockStatus || "")
+        ).length;
+
+        const averageRating = totalItems > 0
+                ? Products.reduce((sum, item) => sum + (item.rating || 0), 0) / totalItems
+                : 0;
+
+        const topItem = [...Products].sort((a, b) => (b.rating || 0) - (a.rating || 0))[0];
+
+        return { totalItems, totalInventoryValue, inStockCount, averageRating, topItem };
+    }, []);
+
+    const siteCards = [
+        { title: "Top Material", value: dashboardStats.topItem?.name || "Cement", meta: `${dashboardStats.topItem?.rating?.toFixed(1) || "4.8"} rating`, icon: "bi-award-fill" },
+        { title: "Categories", value: adminCategories.length, meta: "Available materials", icon: "bi-grid-fill" },
+        { title: "Stock Available", value: `${dashboardStats.inStockCount}/${dashboardStats.totalItems}`, meta: "Ready for site use", icon: "bi-box-seam" },
+    ];
+
     const submit = async (e) => {
         e.preventDefault();
-        if (!productName || !productDescription || !productCost || !productPhoto) {
-            setError("Please fill all fields and select a photo");
+
+        // Validation
+        if (!itemName || !itemDescription || !itemCost || !itemPhoto || !itemCategory) {
+            setError("Please fill all fields and upload item image");
             return;
         }
 
@@ -24,108 +69,148 @@ const AddProducts = () => {
         setSuccess("");
 
         try {
+            // Preparing the data for the API
             const data = new FormData();
-            data.append("productName", productName);
-            data.append("productCost", productCost);
-            data.append("productDescription", productDescription);
-            data.append("productPhoto", productPhoto);
+            data.append("product_name", itemName);
+            data.append("product_cost", itemCost);
+            data.append("product_category", itemCategory);
+            data.append("product_description", itemDescription);
+            data.append("product_photo", itemPhoto);
 
-            await new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    if (Math.random() > 0.8) {
-                        reject(new Error("Upload failed"));
-                    } else {
-                        resolve({ data: "success" });
-                    }
-                }, 2500);
+            // HIT  LIVE API
+            const response = await axios.post("https://philipswala.alwaysdata.net/api/add_product", data, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
             });
 
-            setSuccess("Product uploaded successfully! Redirecting to home...");
-            setTimeout(() => {
-                navigate("/");
-            }, 1500);
+            // Assuming your API returns a 200 or 201 on success
+            if (response.status === 200 || response.status === 201) {
+                setSuccess("Construction item added successfully! 🏗️");
+                // Reset form
+                setItemName("");
+                setItemDescription("");
+                setItemCost("");
+                setItemPhoto(null);
+                
+                setTimeout(() => navigate("/"), 2000);
+            }
+
         } catch (err) {
-            setError(err.message || "Error uploading product, please try again");
+            // Capture specific error message from your AlwaysData backend
+            const errorMessage = err.response?.data?.message || "Server Error: Could not add product.";
+            setError(errorMessage);
+            console.error("Upload Error:", err);
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="container mt-5">
-            <div className="row justify-content-center">
-                <div className="col-md-9 col-lg-8">
-                    <div className="card shadow-lg border-0 form-card">
-                        <div className="card-body p-4 p-lg-5">
-                            <h2 className="text-center mb-4 fw-bold">Upload Product</h2>
-                            {error && <div className="alert alert-danger rounded-3">{error}</div>}
-                            {success && <div className="alert alert-success rounded-3">{success}</div>}
-                            {loading && (
-                                <div className="alert alert-info rounded-3">
-                                    <SportsLoader text="Uploading product..." compact />
-                                </div>
-                            )}
-                            <form onSubmit={submit} className="pro-form">
-                                <div className="mb-3">
-                                    <label className="form-label">Product Name</label>
-                                    <input
-                                        type="text"
-                                        className="form-control form-control-pro"
-                                        placeholder="Enter product name"
-                                        required
-                                        value={productName}
-                                        onChange={(e) => setProductName(e.target.value)}
-                                    />
-                                </div>
-                                <div className="mb-3">
-                                    <label className="form-label">Description</label>
-                                    <textarea
-                                        className="form-control form-control-pro"
-                                        rows="4"
-                                        placeholder="Describe your product"
-                                        required
-                                        value={productDescription}
-                                        onChange={(e) => setProductDescription(e.target.value)}
-                                    />
-                                </div>
-                                <div className="mb-3">
-                                    <label className="form-label">Price (KSh)</label>
-                                    <input
-                                        type="number"
-                                        className="form-control form-control-pro"
-                                        placeholder="Enter price"
-                                        min="0"
-                                        step="0.01"
-                                        required
-                                        value={productCost}
-                                        onChange={(e) => setProductCost(e.target.value)}
-                                    />
-                                </div>
-                                <div className="mb-4">
-                                    <label className="form-label">Product Photo</label>
-                                    <input
-                                        type="file"
-                                        className="form-control form-control-pro"
-                                        accept="image/*"
-                                        required
-                                        onChange={(e) => setProductPhoto(e.target.files[0])}
-                                    />
-                                    {productPhoto && (
-                                        <small className="text-muted d-block mt-2">Selected: {productPhoto.name}</small>
-                                    )}
-                                </div>
-                                <button type="submit" className="btn btn-success w-100 btn-pro" disabled={loading}>
-                                    {loading ? (
-                                        <>
-                                            <i className="bi bi-upload spinner-border spinner-border-sm me-2"></i>
-                                            Uploading...
-                                        </>
-                                    ) : (
-                                        "Upload Product"
-                                    )}
-                                </button>
-                            </form>
+        <div className="container mt-5" style={{ backgroundColor: 'lightblue', borderRadius: '15px', padding: '20px' }}>
+            <section className="admin-hero mb-4">
+                <div className="admin-hero-copy">
+                    <span className="admin-section-tag">🏗️ Site Control</span>
+                    <h1 className="admin-hero-title">Construction Admin Panel</h1>
+                    <p className="admin-hero-text">Manage construction materials, tools, and supplies.</p>
+                </div>
+
+                <div className="admin-scoreboard">
+                    <div className="admin-scoreboard-header">
+                        <span>Inventory Dashboard</span>
+                        <span>Live Data</span>
+                    </div>
+                    <div className="admin-scoreboard-grid">
+                        <div className="admin-score-tile">
+                            <span>Items</span>
+                            <strong>{dashboardStats.totalItems}</strong>
                         </div>
+                        <div className="admin-score-tile">
+                            <span>Value</span>
+                            <strong>KSh {dashboardStats.totalInventoryValue.toLocaleString()}</strong>
+                        </div>
+                        <div className="admin-score-tile">
+                            <span>Rating</span>
+                            <strong>{dashboardStats.averageRating.toFixed(1)}</strong>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div className="row g-4">
+                <div className="col-xl-4">
+                    {siteCards.map((card) => (
+                        <div key={card.title} className="admin-metric-card shadow-sm mb-3" style={{ background: 'white', padding: '15px', borderRadius: '10px' }}>
+                            <i className={`bi ${card.icon}`} style={{ fontSize: '1.5rem', color: '#007bff' }}></i>
+                            <h4>{card.title}</h4>
+                            <h3>{card.value}</h3>
+                            <p className="text-muted">{card.meta}</p>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="col-xl-8">
+                    <div className="card p-4 shadow-lg border-0">
+                        <h2 className="mb-4">➕ Add Construction Item</h2>
+
+                        {error && <div className="alert alert-danger">{error}</div>}
+                        {success && <div className="alert alert-success">{success}</div>}
+
+                        {loading && (
+                            <BuildLoader text="Uploading to server... 🚧" />
+                        )}
+
+                        <form onSubmit={submit}>
+                            <label className="form-label">Item Name</label>
+                            <input
+                                type="text"
+                                placeholder="e.g. Bamburi Cement"
+                                className="form-control mb-3"
+                                value={itemName}
+                                onChange={(e) => setItemName(e.target.value)}
+                            />
+
+                            <label className="form-label">Category</label>
+                            <select
+                               className="form-select mb-3 py-3 rounded-4 shadow-sm"
+                                value={itemCategory}
+                                onChange={(e) => setItemCategory(e.target.value)}
+                            >
+                                {adminCategories.map((cat) => (
+                                    <option key={cat} value={cat}>{cat}</option>
+                                ))}
+                            </select>
+
+                            <label className="form-label">Description</label>
+                            <textarea
+                                placeholder="Provide technical specs..."
+                                className="form-control mb-3"
+                                rows="3"
+                                value={itemDescription}
+                                onChange={(e) => setItemDescription(e.target.value)}
+                            />
+
+                            <label className="form-label">Cost (KSh)</label>
+                            <input
+                                type="number"
+                                placeholder="Cost in KSh"
+                                className="form-control mb-3"
+                                value={itemCost}
+                                onChange={(e) => setItemCost(e.target.value)}
+                            />
+
+                            <label className="form-label">Product Image</label>
+                            <input
+                                type="file"
+                                className="form-control mb-4"
+                                accept="image/*"
+                                onChange={(e) => setItemPhoto(e.target.files[0])}
+                            />
+
+                            <button type="submit" className="btn btn-primary w-100 py-2" disabled={loading}>
+                                {loading ? "Processing..." : "Add Item 🚀"}
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
