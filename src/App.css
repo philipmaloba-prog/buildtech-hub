@@ -14,18 +14,355 @@
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  background-color: transparent !important;
+  min-height: auto;
+  padding: 1rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.top-left-logo {
+  position: absolute;
+  top: 0.5rem;
+  left: 1rem;
+  height: 120px;
+  width: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .top-left-logo {
+    height: 84px;
+    left: 0.5rem;
+  }
 }
 
 .App-link {
   color: #61dafb;
+}
+
+:root {
+  --sport-bg: #f3f7f6;
+  --sport-ink: #112421;
+  --sport-primary: #0ea66c;
+  --sport-primary-dark: #0b7f53;
+  --sport-accent: #ffb703;
+  --sport-surface: #ffffff;
+  --sport-glass: rgba(255, 255, 255, 0.74);
+  --form-accent: #198754;
+  --form-border: #d8e2dc;
+  --form-bg: #ffffff;
+  --form-shadow: 0 14px 34px rgba(24, 39, 75, 0.08);
+}
+
+body {
+  background:
+    radial-gradient(circle at 10% 10%, rgba(14, 166, 108, 0.15), transparent 28%),
+    radial-gradient(circle at 92% 24%, rgba(255, 183, 3, 0.18), transparent 24%),
+    linear-gradient(180deg, #f8fbfa 0%, #edf4f2 100%);
+  color: var(--sport-ink);
+}
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.sports-header {
+  background:
+    linear-gradient(135deg, rgba(13, 31, 26, 0.96), rgba(12, 96, 63, 0.9)),
+    repeating-linear-gradient(
+      -35deg,
+      rgba(255, 255, 255, 0.08) 0,
+      rgba(255, 255, 255, 0.08) 8px,
+      transparent 8px,
+      transparent 16px
+    );
+  border-bottom: 3px solid rgba(255, 183, 3, 0.9);
+  box-shadow: 0 14px 30px rgba(8, 28, 22, 0.26);
+}
+
+.sports-title {
+  letter-spacing: 0.02em;
+  text-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
+}
+
+.sports-navbar {
+  background: var(--sport-glass) !important;
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(14, 166, 108, 0.22);
+}
+
+.sports-brand {
+  letter-spacing: 0.04em;
+}
+
+.sports-nav-link {
+  border-radius: 999px;
+  padding: 0.38rem 0.92rem !important;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.sports-nav-link:hover {
+  background-color: rgba(14, 166, 108, 0.12);
+  color: #0b7f53 !important;
+}
+
+.products-page {
+  padding-top: 0.5rem;
+}
+
+.products-heading {
+  color: #0d8f5e !important;
+  text-shadow: 0 3px 12px rgba(14, 166, 108, 0.2);
+}
+
+.products-subheading {
+  color: #4a5d58 !important;
+}
+
+.product-card {
+  border: 1px solid rgba(11, 127, 83, 0.12);
+  border-radius: 1rem;
+  overflow: hidden;
+  background: var(--sport-surface);
+}
+
+.product-image {
+  height: 210px;
+  object-fit: cover;
+}
+
+.product-title {
+  color: #102823;
+}
+
+.product-desc {
+  color: #4b5d58;
+}
+
+.product-category-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #0a6844;
+  background: rgba(14, 166, 108, 0.14);
+  border: 1px solid rgba(14, 166, 108, 0.24);
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+}
+
+.product-rating {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #475b56;
+}
+
+.product-rating i {
+  color: #ffb703;
+}
+
+.product-benefit {
+  font-size: 0.87rem;
+  color: #2e4741;
+}
+
+.product-benefit i {
+  color: #f4a700;
+}
+
+.product-specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.product-spec-chip {
+  font-size: 0.74rem;
+  color: #245046;
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: 0.5rem;
+  padding: 0.2rem 0.45rem;
+}
+
+.product-trust-signal {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #0d8f5e;
+}
+
+.product-trust-signal i {
+  color: #0ea66c;
+}
+
+.product-delivery {
+  font-size: 0.78rem;
+  color: #506560;
+}
+
+.product-price {
+  color: #0d8f5e !important;
+}
+
+.product-old-price {
+  color: #748782;
+  text-decoration: line-through;
+}
+
+.product-details-btn {
+  border-color: rgba(11, 127, 83, 0.35);
+  color: #0b7f53;
+}
+
+.product-details-btn:hover {
+  background-color: #0b7f53;
+  border-color: #0b7f53;
+  color: #fff;
+}
+
+.product-cta-btn {
+  border-width: 2px;
+  border-color: var(--sport-primary);
+  color: var(--sport-primary);
+  border-radius: 999px;
+  padding-inline: 1.4rem;
+}
+
+.product-cta-btn:hover {
+  background-color: var(--sport-primary);
+  border-color: var(--sport-primary);
+  color: #fff;
+}
+
+.hover-shadow {
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
+}
+
+.hover-shadow:hover {
+  box-shadow: 0 0.9rem 2.2rem rgba(8, 44, 32, 0.2) !important;
+  transform: translateY(-6px);
+}
+
+.form-card {
+  border-radius: 1rem;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfdfb 100%);
+  box-shadow: var(--form-shadow);
+}
+
+.pro-form .form-label {
+  font-weight: 600;
+  color: #1f2d3d;
+  margin-bottom: 0.5rem;
+}
+
+.form-control-pro {
+  border-radius: 0.75rem;
+  border: 1px solid var(--form-border);
+  background-color: var(--form-bg);
+  padding: 0.72rem 0.9rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.12s ease;
+}
+
+.form-control-pro:focus {
+  border-color: #9dd8bc;
+  box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.18);
+}
+
+.input-group-text-pro {
+  border-color: var(--form-border);
+}
+
+.btn-pro {
+  border-radius: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  box-shadow: 0 8px 20px rgba(25, 135, 84, 0.22);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-pro:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(25, 135, 84, 0.26);
+}
+
+.site-footer {
+  background: linear-gradient(150deg, #0d1f1a 0%, #1a2f2a 55%, #111827 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer-brand {
+  color: #35c287 !important;
+  font-size: 1.3rem;
+}
+
+.footer-copy {
+  color: rgba(245, 248, 250, 0.78);
+  line-height: 1.65;
+  max-width: 420px;
+}
+
+.footer-heading {
+  color: #5be3a5;
+  font-size: 1rem;
+}
+
+.footer-link {
+  color: rgba(240, 245, 249, 0.82);
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.footer-link:hover {
+  color: #ffc857;
+  transform: translateX(1px);
+}
+
+.footer-contact-item {
+  color: rgba(240, 245, 249, 0.82);
+  margin-bottom: 0.55rem;
+}
+
+.footer-social-btn {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #eef5f9;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-social-btn:hover {
+  border-color: #ffc857;
+  color: #ffc857;
+}
+
+.footer-social-btn-success {
+  background-color: #198754;
+  border-color: #198754;
+}
+
+.footer-divider {
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.footer-bottom-text {
+  color: rgba(240, 245, 249, 0.7);
+}
+
+.footer-bottom-strip {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.22);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.footer-badge {
+  opacity: 0.85;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 2px;
 }
 
 @keyframes App-logo-spin {
